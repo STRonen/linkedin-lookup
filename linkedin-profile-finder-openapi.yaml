@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: linkedin-profile-finder
+  version: "1.0.0"
+  description: Finds a LinkedIn profile using a person's full name (mandatory input).
+
+servers:
+  - url: https://linkedin-profile-finder.23w7nm42c1ab.us-south.codeengine.appdomain.cloud
+
+paths:
+  /:
+    post:
+      operationId: find_linkedin_profile
+      summary: Find LinkedIn profile by full name
+      description: >
+        Calls the linkedin-profile-finder Code Engine function to retrieve LinkedIn profile metadata.
+        Provide a full name (required). Optionally provide a LinkedIn profile URL to narrow the lookup.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [full_name]
+              properties:
+                full_name:
+                  type: string
+                  minLength: 1
+                  description: Person's full name (required), e.g. "Ada Lovelace"
+                profile_url:
+                  type: string
+                  format: uri
+                  description: Optional LinkedIn profile URL (if already known)
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+        "422":
+          description: Validation error (missing/invalid input)
